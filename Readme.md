@@ -1,31 +1,12 @@
-# Extra customer field in PrestaShop 1.7 Module
+# Extra customer fields in PrestaShop 1.7 Module
 
-Add extra customer field in PrestaShop 1.7.
+This is a module for PrestaShop, an open-source eCommerce platform, that adds extra fields to the customer registration and account pages. The module adds fields for social media account information and preferred communication method.
 
-==For PrestaShop Development training only.==
+The module is licensed under the Academic Free License (AFL 3.0) and was developed by vallka. The module's version is 1.0.0, and it is compatible with PrestaShop 1.7 and above.
 
-Add {hook h='displayMyExtraValue' id_customer=$customer->id} to show extra value in templates.
+The module installs a new database table named extra_customer_fields to store the additional information. The module also registers several hooks to integrate with the customer registration and account pages. The additionalCustomerFormFields hook adds the extra fields to the customer registration form. The validateCustomerFormFields hook validates the extra fields before saving them to the database. The actionObjectCustomerUpdateAfter and actionObjectCustomerAddAfter hooks update and add the extra fields to the database when a customer is updated or added. Finally, the actionCustomerFormBuilderModifier hook modifies the customer account form to include the extra fields.
 
-### Prerequisites
-
-- You need a shop with **PrestaShop 1.7.0.0** or higher.
-- You need access to the **shell** of your server.
-- You need **composer**.
-
-## Installing
-
-- Download or clone module into modules directory of your PrestaShop installation
-- Install module from Back Office
-
-## Versioning
-
-We use [SemVer](http://semver.org/) for versioning. For the versions available, see the [tags on this repository](https://github.com/frederic-benoist/fbsample-extracustomerfield/tags). 
-
-## Authors
-
-* **Frédéric BENOIST** - *Initial work* - [Expert PrestaShop](https://www.fbenoist.com)
-
-See also the list of [contributors](https://github.com/frederic-benoist/fbsample-extracustomerfield/Contributors) who participated in this project.
+The module has two methods for reading and writing the extra field values: readModuleValues and writeModuleValues. The readModuleValues method reads the extra field values from the database for a given customer ID, and the writeModuleValues method writes the extra field values to the database for a given customer ID.
 
 ## Licensing
 
@@ -38,6 +19,5 @@ to license@prestashop.com so we can send you a copy immediately.
 
 ## DISCLAIMER
  
-> Do not edit or add to this file if you wish to upgrade this module to newer versions in the future. If you wish to customize PrestaShop for your needs please refer to http://www.prestashop.com for more information.
 
 THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.

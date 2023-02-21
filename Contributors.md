@@ -1,3 +1,0 @@
-GitHub contributors:
---------------------------------
-- Frédéric BENOIST
