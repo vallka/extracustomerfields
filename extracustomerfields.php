@@ -25,7 +25,7 @@ class ExtraCustomerFields extends Module
     {
         $this->name = 'extracustomerfields';
         $this->author = 'vallka';
-        $this->version = '1.0.0';
+        $this->version = '1.0.1';
         $this->need_instance = 0;
         $this->bootstrap = true;
         $this->tab = 'others';
@@ -89,6 +89,7 @@ class ExtraCustomerFields extends Module
             `whatsapp` varchar(255) DEFAULT NULL,
             `telegram` varchar(255) DEFAULT NULL,
             `preferred_communication_method` varchar(255) DEFAULT NULL,
+            `referrer` varchar(255) DEFAULT NULL,
             PRIMARY KEY (`id_customer`)
         ) ENGINE=' . _MYSQL_ENGINE_ . ' DEFAULT CHARSET=utf8;';
 
@@ -114,7 +115,7 @@ class ExtraCustomerFields extends Module
      */
     protected function readModuleValues($id_customer)
     {
-        $query = 'SELECT `facebook`, `instagram`, `twitter`, `whatsapp`, `telegram`, `preferred_communication_method`'
+        $query = 'SELECT `facebook`, `instagram`, `twitter`, `whatsapp`, `telegram`, `preferred_communication_method`, `referrer`'
             .' FROM `'._DB_PREFIX_.'extra_customer_fields`'
             .' WHERE `id_customer` = '.(int)$id_customer;
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow($query);
@@ -138,10 +139,24 @@ class ExtraCustomerFields extends Module
             $whatsapp = Tools::getValue('whatsapp');
             $telegram = Tools::getValue('telegram');
             $preferred_communication_method = Tools::getValue('preferred_communication_method');
+            $referrer = Tools::getValue('referrer');
     
-            $query = 'INSERT INTO `'._DB_PREFIX_.'extra_customer_fields` (`id_customer`, `facebook`, `instagram`, `twitter`, `whatsapp`, `telegram`, `preferred_communication_method`)'
-                    .' VALUES ('.(int)$id_customer.', "'.pSQL($facebook).'", "'.pSQL($instagram).'", "'.pSQL($twitter).'", "'.pSQL($whatsapp).'", "'.pSQL($telegram).'", "'.pSQL($preferred_communication_method).'")'
-                    .' ON DUPLICATE KEY UPDATE `facebook` = "'.pSQL($facebook).'", `instagram` = "'.pSQL($instagram).'", `twitter` = "'.pSQL($twitter).'", `whatsapp` = "'.pSQL($whatsapp).'", `telegram` = "'.pSQL($telegram).'", `preferred_communication_method` = "'.pSQL($preferred_communication_method).'"';
+            $query = 'INSERT INTO `'._DB_PREFIX_.'extra_customer_fields` (`id_customer`, `facebook`, `instagram`, `twitter`, `whatsapp`, `telegram`, `referrer`, `preferred_communication_method`)'
+                    .' VALUES ('.(int)$id_customer.', "'.
+                                    pSQL($facebook).'", "'.
+                                    pSQL($instagram).'", "'.
+                                    pSQL($twitter).'", "'.
+                                    pSQL($whatsapp).'", "'.
+                                    pSQL($telegram).'", "'.
+                                    pSQL($referrer).'", "'.
+                                    pSQL($preferred_communication_method).'")'
+                    .' ON DUPLICATE KEY UPDATE `facebook` = "'.pSQL($facebook).
+                                '", `instagram` = "'.pSQL($instagram).
+                                '", `twitter` = "'.pSQL($twitter).
+                                '", `whatsapp` = "'.pSQL($whatsapp).
+                                '", `telegram` = "'.pSQL($telegram).
+                                '", `referrer` = "'.pSQL($referrer).
+                                '", `preferred_communication_method` = "'.pSQL($preferred_communication_method).'"';
     
             Db::getInstance()->execute($query);
         }
@@ -194,9 +209,43 @@ class ExtraCustomerFields extends Module
 
         $extra_fields['preferred_communication_method'] = (new FormField)
             ->setName('preferred_communication_method')
-            ->setType('text')
+            ->setType('select')
+            ->setAvailableValues(
+                [   
+                    'Email'               => $this->l('Email'),                   
+                    'WhatsApp'            => $this->l('WhatsApp'),                   
+                    'Telegram'            => $this->l('Telegram'),                   
+                    'Facebook Messenger'  => $this->l('Facebook Messenger'),                   
+                    'Phone'               => $this->l('Phone'),                   
+                    'SMS'                 => $this->l('SMS'),                   
+                    'Other'               => $this->l('Other')
+                ]
+            )
             ->setValue(isset($row['preferred_communication_method']) ? $row['preferred_communication_method'] : '')
             ->setLabel($this->l('Preferred Communication Method'));
+
+            $extra_fields['referrer'] = (new FormField)
+            ->setName('referrer')
+            ->setType('select')
+            ->setAvailableValues(
+                [   
+                    'Facebook'               => $this->l('Facebook'),                   
+                    'Instagram'              => $this->l('Instagram'),                  
+                    'YouTube'                => $this->l('YouTube'),                
+                    'TikTok'                 => $this->l('TikTok'),                  
+                    'Pinterest'              => $this->l('Pinterest'),                 
+                    'Google Search'          => $this->l('Google Search'),               
+                    'Other Search Engine'    => $this->l('Other Search Engine'),           
+                    'Online Advert'          => $this->l('Online Advert'),            
+                    'Paper Advert'           => $this->l('Paper Advert'),            
+                    'TV Advert'              => $this->l('TV Advert'),            
+                    'Shop Window'            => $this->l('Shop Window'),            
+                    "Friend's recommendation"=> $this->l("Friend's recommendation"),
+                    'Other'                  => $this->l('Other')
+                ]
+            )
+            ->setValue(isset($row['referrer']) ? $row['referrer'] : '')
+            ->setLabel($this->l('Where did you find us?'));
 
         return $extra_fields;
     }
@@ -247,6 +296,7 @@ class ExtraCustomerFields extends Module
         $formBuilder->add('whatsapp', TextType::class, ['label' => 'Whatsapp','required' => false, 'disabled' => true]);
         $formBuilder->add('telegram', TextType::class, ['label' => 'Telegram','required' => false, 'disabled' => true]);
         $formBuilder->add('preferred_communication_method', TextType::class, ['label' => 'Preferred Communication Method','required' => false, 'disabled' => true]);
+        $formBuilder->add('referrer', TextType::class, ['label' => 'Where did you find us?','required' => false, 'disabled' => true]);
 
         $customerId = $params['id'];
 
@@ -258,6 +308,7 @@ class ExtraCustomerFields extends Module
         $params['data']['whatsapp'] = $data['whatsapp'];
         $params['data']['telegram'] = $data['telegram'];
         $params['data']['preferred_communication_method'] = $data['preferred_communication_method'];
+        $params['data']['referrer'] = $data['referrer'];
 
         $formBuilder->setData($params['data']);
     }
